@@ -116,6 +116,10 @@ if (MUSE_MODULE_UPDATE)
     add_subdirectory(update)
 endif()
 
+if (MUSE_MODULE_LV2)
+    add_subdirectory(lv2)
+endif()
+
 # Tests
 if (MUSE_ENABLE_UNIT_TESTS)
     define_property(TARGET PROPERTY OUTPUT_XML

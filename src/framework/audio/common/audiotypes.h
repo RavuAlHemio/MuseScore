@@ -201,6 +201,7 @@ enum class AudioFxType {
     Undefined = -1,
     VstFx,
     MuseFx,
+    Lv2Fx,
 };
 
 enum class AudioFxCategory {
@@ -236,8 +237,8 @@ struct AudioFxParams {
         switch (resourceMeta.type) {
         case AudioResourceType::VstPlugin: return AudioFxType::VstFx;
         case AudioResourceType::MusePlugin: return AudioFxType::MuseFx;
+        case AudioResourceType::Lv2Plugin: return AudioFxType::Lv2Fx;
         case AudioResourceType::AudioUnit:
-        case AudioResourceType::Lv2Plugin:
         case AudioResourceType::FluidSoundfont:
         case AudioResourceType::MuseSamplerSoundPack:
         case AudioResourceType::Undefined: break;

@@ -106,6 +106,7 @@ set(LINK_LIB
 
     # have stub, links real or stub
     muse::network
+    muse::lv2
     muse::vst
     muse::update
     muse::accessibility

@@ -154,5 +154,9 @@
 #cmakedefine MUSE_MODULE_WORKSPACE_TESTS 1
 #cmakedefine MUSE_MODULE_WORKSPACE_API 1
 
+#cmakedefine MUSE_MODULE_LV2 1
+#cmakedefine MUSE_MODULE_LV2_TESTS 1
+#cmakedefine MUSE_MODULE_LV2_API 1
+
 #cmakedefine MUSE_ENABLE_UNIT_TESTS 1
 
