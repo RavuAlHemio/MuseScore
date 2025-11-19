@@ -19,33 +19,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MUSE_LV2_MODULE_H
-#define MUSE_LV2_MODULE_H
+#ifndef MUSE_LV2_LV2TYPES_H
+#define MUSE_LV2_LV2TYPES_H
 
 #include <memory>
+#include <unordered_map>
+#include <vector>
 
-#include <lilv/lilvmm.hpp>
-
-#include "modularity/imodulesetup.h"
+#include <lilv/lilv.h>
 
 namespace muse::lv2 {
-class Lv2ModulesRepository;
-class Lv2World;
-class Lv2Module : public modularity::IModuleSetup
-{
-public:
-    std::string moduleName() const override;
 
-    void registerExports() override;
-    void resolveImports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-    void onInit(const IApplication::RunMode& mode) override;
-    void onDeinit() override;
+using PluginModulePtr = std::shared_ptr<Lilv::Plugin>;
 
-private:
-    std::shared_ptr<Lv2World> m_world;
-    std::shared_ptr<Lv2ModulesRepository> m_pluginModulesRepo;
-};
 }
-#endif // MUSE_LV2_MODULE_H
+
+#endif // MUSE_LV2_LV2TYPES_H

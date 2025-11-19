@@ -28,6 +28,10 @@
 #include "audioplugins/iaudiopluginsscannerregister.h"
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
+#include "ilv2modulesrepository.h"
+#include "internal/lv2modulesrepository.h"
+#include "internal/lv2world.h"
+
 #include "log.h"
 
 using namespace muse::lv2;
@@ -37,19 +41,26 @@ static void lv2_init_qrc()
     Q_INIT_RESOURCE(lv2);
 }
 
-std::string LV2Module::moduleName() const
+std::string Lv2Module::moduleName() const
 {
     return "lv2";
 }
 
-void LV2Module::registerExports()
+void Lv2Module::registerExports()
 {
-    //m_configuration = std::make_shared<VstConfiguration>();
+    m_world = std::make_shared<Lv2World>();
+    if (!m_world->initSucceeded()) {
+        LOGE() << "Failed to create LV2 world";
+        m_world = nullptr;
+        return;
+    }
+    m_pluginModulesRepo = std::make_shared<Lv2ModulesRepository>();
 
-    //ioc()->registerExport<IVstConfiguration>(moduleName(), m_configuration);
+    ioc()->registerExport<ILv2World>(moduleName(), m_world);
+    ioc()->registerExport<ILv2ModulesRepository>(moduleName(), m_pluginModulesRepo);
 }
 
-void LV2Module::resolveImports()
+void Lv2Module::resolveImports()
 {
     /*
     auto fxResolver = ioc()->resolve<IFxResolver>(moduleName());
@@ -69,12 +80,12 @@ void LV2Module::resolveImports()
     */
 }
 
-void LV2Module::registerResources()
+void Lv2Module::registerResources()
 {
     lv2_init_qrc();
 }
 
-void LV2Module::registerUiTypes()
+void Lv2Module::registerUiTypes()
 {
     /*
     qmlRegisterType<Lv2View>("Muse.Lv2", 1, 0, "Lv2View");
@@ -83,7 +94,7 @@ void LV2Module::registerUiTypes()
     */
 }
 
-void LV2Module::onInit(const IApplication::RunMode&)
+void Lv2Module::onInit(const IApplication::RunMode&)
 {
     /*
     m_configuration->init();
@@ -93,7 +104,7 @@ void LV2Module::onInit(const IApplication::RunMode&)
     */
 }
 
-void LV2Module::onDeinit()
+void Lv2Module::onDeinit()
 {
     /*
     m_pluginModulesRepo->deInit();

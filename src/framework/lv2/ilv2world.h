@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2025 MuseScore Limited and others
+ * Copyright (C) 2021 MuseScore Limited and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,33 +19,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MUSE_LV2_MODULE_H
-#define MUSE_LV2_MODULE_H
+#pragma once
 
-#include <memory>
+#include "modularity/imoduleinterface.h"
 
-#include <lilv/lilvmm.hpp>
-
-#include "modularity/imodulesetup.h"
+#include "io/path.h"
+#include "async/channel.h"
 
 namespace muse::lv2 {
-class Lv2ModulesRepository;
-class Lv2World;
-class Lv2Module : public modularity::IModuleSetup
+class ILv2World : MODULE_EXPORT_INTERFACE
 {
+    INTERFACE_ID(ILv2World)
+
 public:
-    std::string moduleName() const override;
-
-    void registerExports() override;
-    void resolveImports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-    void onInit(const IApplication::RunMode& mode) override;
-    void onDeinit() override;
-
-private:
-    std::shared_ptr<Lv2World> m_world;
-    std::shared_ptr<Lv2ModulesRepository> m_pluginModulesRepo;
+    virtual ~ILv2World() = default;
 };
 }
-#endif // MUSE_LV2_MODULE_H

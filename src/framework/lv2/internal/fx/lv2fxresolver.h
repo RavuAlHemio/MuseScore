@@ -1,0 +1,51 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * MuseScore-CLA-applies
+ *
+ * MuseScore
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2025 MuseScore Limited and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#ifndef MUSE_LV2_LV2FXRESOLVER_H
+#define MUSE_LV2_LV2FXRESOLVER_H
+
+#include "audio/engine/internal/fx/abstractfxresolver.h"
+
+#include "modularity/ioc.h"
+
+namespace muse::lv2 {
+class Lv2FxResolver : public audio::fx::AbstractFxResolver
+{
+    muse::Inject<ILv2ModulesRepository> pluginModulesRepo;
+
+public:
+    // IFxResolver::IResolver interface
+    audio::AudioResourceMetaList resolveResources() const override;
+    void refresh() override;
+    void clearAllFx() override;
+
+private:
+    audio::IFxProcessorPtr createMasterFx(const audio::AudioFxParams& fxParams, const audio::OutputSpec& outputSpec) const override;
+    audio::IFxProcessorPtr createTrackFx(const audio::TrackId trackId, const audio::AudioFxParams& fxParams,
+                                         const audio::OutputSpec& outputSpec) const override;
+
+    void removeMasterFx(const audio::AudioResourceId& resoureId, audio::AudioFxChainOrder order) override;
+    void removeTrackFx(const audio::TrackId trackId, const audio::AudioResourceId& resoureId, audio::AudioFxChainOrder order) override;
+};
+}
+
+#endif // MUSE_LV2_LV2FXRESOLVER_H

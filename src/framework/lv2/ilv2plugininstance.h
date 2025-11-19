@@ -19,33 +19,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MUSE_LV2_MODULE_H
-#define MUSE_LV2_MODULE_H
+#pragma once
 
-#include <memory>
+#include "global/async/notification.h"
 
-#include <lilv/lilvmm.hpp>
-
-#include "modularity/imodulesetup.h"
+#include "audio/common/audiotypes.h"
 
 namespace muse::lv2 {
-class Lv2ModulesRepository;
-class Lv2World;
-class Lv2Module : public modularity::IModuleSetup
+class ILv2PluginInstance
 {
 public:
-    std::string moduleName() const override;
+    virtual ~ILv2PluginInstance() = default;
 
-    void registerExports() override;
-    void resolveImports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-    void onInit(const IApplication::RunMode& mode) override;
-    void onDeinit() override;
+    virtual const muse::audio::AudioResourceId& resourceId() const = 0;
+    virtual const std::string& name() const = 0;
 
-private:
-    std::shared_ptr<Lv2World> m_world;
-    std::shared_ptr<Lv2ModulesRepository> m_pluginModulesRepo;
+    virtual bool isLoaded() const = 0;
+    virtual async::Notification loadingCompleted() const = 0;
+
+    virtual void updatePluginConfig(const muse::audio::AudioUnitConfig& config) = 0;
+    virtual void refreshConfig() = 0;
+    virtual async::Channel<muse::audio::AudioUnitConfig> pluginSettingsChanged() const = 0;
+
+    virtual void setSampleRate(muse::audio::sample_rate_t newRate) = 0;
+    virtual void process(float *buffer, unsigned int sampleCount) = 0;
 };
 }
-#endif // MUSE_LV2_MODULE_H
