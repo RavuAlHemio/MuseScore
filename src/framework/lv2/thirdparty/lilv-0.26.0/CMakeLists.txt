@@ -46,6 +46,7 @@ set(MODULE_SRC
     ${LILV_DIR}/src/world.c
 
     ${LILV_DIR}/include/lilv/lilv.h
+    ${LILV_DIR}/include/lilv/lilvmm.hpp
 
     ${LILV_DIR}/src/dylib.h
     ${LILV_DIR}/src/lilv_config.h
