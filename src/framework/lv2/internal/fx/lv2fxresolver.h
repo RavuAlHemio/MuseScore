@@ -30,7 +30,7 @@
 namespace muse::lv2 {
 class Lv2FxResolver : public audio::fx::AbstractFxResolver
 {
-    muse::Inject<ILv2ModulesRepository> pluginModulesRepo;
+    muse::Inject<ILv2InstancesRepository> instancesRepo;
 
 public:
     // IFxResolver::IResolver interface

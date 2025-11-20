@@ -20,24 +20,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "lv2modulesrepository.h"
+#include "lv2instancesrepository.h"
 
 using namespace muse;
 using namespace muse::lv2;
 
-void Lv2ModulesRepository::init()
+void Lv2InstancesRepository::init()
 {
     ONLY_MAIN_THREAD(threadSecurer);
 }
 
-void Lv2ModulesRepository::deInit()
+void Lv2InstancesRepository::deInit()
 {
-    for (auto& pair : m_modules) {
+    for (auto& pair : m_instances) {
         pair.second.reset();
     }
 }
 
-bool Lv2ModulesRepository::exists(const muse::audio::AudioResourceId& resourceId) const
+bool Lv2InstancesRepository::exists(const muse::audio::AudioResourceId& resourceId) const
 {
     ONLY_AUDIO_THREAD(threadSecurer);
 
@@ -46,55 +46,55 @@ bool Lv2ModulesRepository::exists(const muse::audio::AudioResourceId& resourceId
     return knownPlugins()->exists(resourceId);
 }
 
-Lilv::Plugin Lv2ModulesRepository::pluginModule(const muse::audio::AudioResourceId& resourceId) const
+PluginInstancePtr Lv2InstancesRepository::pluginInstance(const muse::audio::AudioResourceId& resourceId) const
 {
     ONLY_AUDIO_OR_MAIN_THREAD(threadSecurer);
 
     std::lock_guard lock(m_mutex);
 
-    auto search = m_modules.find(resourceId);
+    auto search = m_instances.find(resourceId);
 
-    if (search != m_modules.end()) {
+    if (search != m_instances.end()) {
         return search->second;
     }
 
     return nullptr;
 }
 
-void Lv2ModulesRepository::addPluginModule(const muse::audio::AudioResourceId& resourceId)
+void Lv2InstancesRepository::addNewPluginInstance(const muse::audio::AudioResourceId& resourceId)
 {
     ONLY_MAIN_THREAD(threadSecurer);
 
     std::lock_guard lock(m_mutex);
 
-    auto search = m_modules.find(resourceId);
-    if (search != m_modules.end()) {
+    auto search = m_instances.find(resourceId);
+    if (search != m_instances.end()) {
         return;
     }
 
-    Lilv::Plugin module = createModule(knownPlugins()->pluginPath(resourceId));
+    PluginInstancePtr module = instantiatePlugin(knownPlugins()->pluginPath(resourceId));
     if (!module) {
         return;
     }
 
-    m_modules.emplace(resourceId, std::move(module));
+    m_instances.emplace(resourceId, std::move(module));
 }
 
-void Lv2ModulesRepository::removePluginModule(const muse::audio::AudioResourceId& resourceId)
+void Lv2InstancesRepository::removePluginInstance(const muse::audio::AudioResourceId& resourceId)
 {
     ONLY_MAIN_THREAD(threadSecurer);
 
     std::lock_guard lock(m_mutex);
 
-    auto search = m_modules.find(resourceId);
-    if (search == m_modules.end()) {
+    auto search = m_instances.find(resourceId);
+    if (search == m_instances.end()) {
         return;
     }
 
-    m_modules.erase(search);
+    m_instances.erase(search);
 }
 
-muse::audio::AudioResourceMetaList Lv2ModulesRepository::instrumentModulesMeta() const
+muse::audio::AudioResourceMetaList Lv2InstancesRepository::instrumentModulesMeta() const
 {
     ONLY_AUDIO_THREAD(threadSecurer);
 
@@ -103,7 +103,7 @@ muse::audio::AudioResourceMetaList Lv2ModulesRepository::instrumentModulesMeta()
     return modulesMetaList(audioplugins::AudioPluginType::Instrument);
 }
 
-muse::audio::AudioResourceMetaList Lv2ModulesRepository::fxModulesMeta() const
+muse::audio::AudioResourceMetaList Lv2InstancesRepository::fxModulesMeta() const
 {
     ONLY_AUDIO_THREAD(threadSecurer);
 
@@ -112,11 +112,11 @@ muse::audio::AudioResourceMetaList Lv2ModulesRepository::fxModulesMeta() const
     return modulesMetaList(audioplugins::AudioPluginType::Fx);
 }
 
-void Lv2ModulesRepository::refresh()
+void Lv2InstancesRepository::refresh()
 {
 }
 
-muse::audio::AudioResourceMetaList Lv2ModulesRepository::modulesMetaList(const audioplugins::AudioPluginType& type) const
+muse::audio::AudioResourceMetaList Lv2InstancesRepository::modulesMetaList(const audioplugins::AudioPluginType& type) const
 {
     auto infoAccepted = [type](const audioplugins::AudioPluginInfo& info) {
         return info.type == type && info.meta.type == muse::audio::AudioResourceType::Lv2Plugin && info.enabled;

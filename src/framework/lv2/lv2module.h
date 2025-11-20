@@ -29,7 +29,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace muse::lv2 {
-class Lv2ModulesRepository;
+class Lv2InstancesRepository;
 class Lv2World;
 class Lv2Module : public modularity::IModuleSetup
 {
@@ -45,7 +45,7 @@ public:
 
 private:
     std::shared_ptr<Lv2World> m_world;
-    std::shared_ptr<Lv2ModulesRepository> m_pluginModulesRepo;
+    std::shared_ptr<Lv2InstancesRepository> m_instancesRepo;
 };
 }
 #endif // MUSE_LV2_MODULE_H

@@ -30,7 +30,7 @@
 
 namespace muse::lv2 {
 
-using PluginModulePtr = std::shared_ptr<Lilv::Plugin>;
+using PluginInstancePtr = std::shared_ptr<Lilv::Plugin>;
 
 }
 

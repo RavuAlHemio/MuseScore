@@ -28,8 +28,8 @@
 #include "audioplugins/iaudiopluginsscannerregister.h"
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
-#include "ilv2modulesrepository.h"
-#include "internal/lv2modulesrepository.h"
+#include "ilv2instancesrepository.h"
+#include "internal/lv2instancesrepository.h"
 #include "internal/lv2world.h"
 
 #include "log.h"
@@ -54,10 +54,10 @@ void Lv2Module::registerExports()
         m_world = nullptr;
         return;
     }
-    m_pluginModulesRepo = std::make_shared<Lv2ModulesRepository>();
+    m_instancesRepo = std::make_shared<Lv2InstancesRepository>();
 
     ioc()->registerExport<ILv2World>(moduleName(), m_world);
-    ioc()->registerExport<ILv2ModulesRepository>(moduleName(), m_pluginModulesRepo);
+    ioc()->registerExport<ILv2InstancesRepository>(moduleName(), m_instancesRepo);
 }
 
 void Lv2Module::resolveImports()

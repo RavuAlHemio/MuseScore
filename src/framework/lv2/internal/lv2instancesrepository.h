@@ -20,8 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MUSE_LV2_LV2MODULESREPOSITORY_H
-#define MUSE_LV2_LV2MODULESREPOSITORY_H
+#ifndef MUSE_LV2_LV2INSTANCESREPOSITORY_H
+#define MUSE_LV2_LV2INSTANCESREPOSITORY_H
 
 #include <unordered_map>
 #include <mutex>
@@ -32,25 +32,27 @@
 
 #include "audioplugins/audiopluginstypes.h"
 
-#include "ilv2modulesrepository.h"
+#include "ilv2instancesrepository.h"
+#include "ilv2world.h"
 #include "lv2types.h"
 
 namespace muse::lv2 {
-class Lv2ModulesRepository : public ILv2ModulesRepository
+class Lv2InstancesRepository : public ILv2InstancesRepository
 {
     INJECT(audioplugins::IKnownAudioPluginsRegister, knownPlugins)
+    INJECT(ILv2World, lv2World)
     INJECT_STATIC(muse::audio::IAudioThreadSecurer, threadSecurer)
 
 public:
-    Lv2ModulesRepository() = default;
+    Lv2InstancesRepository() = default;
 
     void init();
     void deInit();
 
     bool exists(const muse::audio::AudioResourceId& resourceId) const override;
-    PluginModulePtr pluginModule(const muse::audio::AudioResourceId& resourceId) const override;
-    void addPluginModule(const muse::audio::AudioResourceId& resourceId) override;
-    void removePluginModule(const muse::audio::AudioResourceId& resourceId) override;
+    PluginInstancePtr pluginInstance(const muse::audio::AudioResourceId& resourceId) const override;
+    void addNewPluginInstance(const muse::audio::AudioResourceId& resourceId) override;
+    void removePluginInstance(const muse::audio::AudioResourceId& resourceId) override;
 
     audio::AudioResourceMetaList instrumentModulesMeta() const override;
     audio::AudioResourceMetaList fxModulesMeta() const override;
@@ -60,8 +62,8 @@ private:
     audio::AudioResourceMetaList modulesMetaList(const audioplugins::AudioPluginType& type) const;
 
     mutable std::mutex m_mutex;
-    mutable std::unordered_map<audio::AudioResourceId, Lilv::Plugin> m_modules;
+    mutable std::unordered_map<audio::AudioResourceId, PluginInstancePtr> m_instances;
 };
 }
 
-#endif // MUSE_LV2_LV2MODULESREPOSITORY_H
+#endif // MUSE_LV2_LV2INSTANCESREPOSITORY_H

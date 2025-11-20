@@ -33,16 +33,16 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/lv2module.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2modulesrepository.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2instancesrepository.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/fx/lv2fxprocessor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/fx/lv2fxresolver.cpp
 
-    ${CMAKE_CURRENT_LIST_DIR}/ilv2modulesrepository.h
+    ${CMAKE_CURRENT_LIST_DIR}/ilv2instancesrepository.h
     ${CMAKE_CURRENT_LIST_DIR}/ilv2plugininstance.h
     ${CMAKE_CURRENT_LIST_DIR}/ilv2world.h
     ${CMAKE_CURRENT_LIST_DIR}/lv2module.h
     ${CMAKE_CURRENT_LIST_DIR}/lv2types.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2modulesrepository.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2instancesrepository.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2plugininstance.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2world.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/fx/lv2fxprocessor.h

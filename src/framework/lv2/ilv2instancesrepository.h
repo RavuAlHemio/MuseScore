@@ -20,8 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MUSE_LV2_ILV2MODULESREPOSITORY_H
-#define MUSE_LV2_ILV2MODULESREPOSITORY_H
+#ifndef MUSE_LV2_ILV2INSTANCESREPOSITORY_H
+#define MUSE_LV2_ILV2INSTANCESREPOSITORY_H
 
 #include <lilv/lilv.h>
 
@@ -31,21 +31,21 @@
 #include "lv2types.h"
 
 namespace muse::lv2 {
-class ILv2ModulesRepository : MODULE_EXPORT_INTERFACE
+class ILv2InstancesRepository : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(ILv2ModulesRepository)
+    INTERFACE_ID(ILv2InstancesRepository)
 
 public:
-    virtual ~ILv2ModulesRepository() = default;
+    virtual ~ILv2InstancesRepository() = default;
 
     virtual bool exists(const muse::audio::AudioResourceId& resourceId) const = 0;
-    virtual PluginModulePtr pluginModule(const muse::audio::AudioResourceId& resourceId) const = 0;
-    virtual void addPluginModule(const muse::audio::AudioResourceId& resourceId) = 0;
-    virtual void removePluginModule(const muse::audio::AudioResourceId& resourceId) = 0;
+    virtual PluginInstancePtr pluginInstance(const muse::audio::AudioResourceId& resourceId) const = 0;
+    virtual void addNewPluginInstance(const muse::audio::AudioResourceId& resourceId) = 0;
+    virtual void removePluginInstance(const muse::audio::AudioResourceId& resourceId) = 0;
     virtual muse::audio::AudioResourceMetaList instrumentModulesMeta() const = 0;
     virtual muse::audio::AudioResourceMetaList fxModulesMeta() const = 0;
     virtual void refresh() = 0;
 };
 }
 
-#endif // MUSE_LV2_ILV2MODULESREPOSITORY_H
+#endif // MUSE_LV2_ILV2INSTANCESREPOSITORY_H
